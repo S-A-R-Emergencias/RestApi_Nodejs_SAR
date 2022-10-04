@@ -2,10 +2,18 @@
 
 import {createPool} from 'mysql2'
 
+import {
+    DB_USER,
+    DB_PORT,
+    DB_HOST,
+    DB_PASSWORD,
+    DB_DATABASE
+} from './config.js'
+
 export const pool = createPool({
-    host:'containers-us-west-89.railway.app',
-    user: 'root',
-    password: "sWch0On7KuPlkGx8BPf0",
-    database:'railway',
-    port: 5449
+    host:DB_HOST,
+    user: DB_USER,
+    password: DB_PASSWORD,
+    database:DB_DATABASE,
+    port: DB_PORT
 })
