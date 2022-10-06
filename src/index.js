@@ -2,7 +2,9 @@
 
 import express from 'express' 
 import indexRoutes from './routes/index.routes.js'
-import personRoutes from './routes/person.routes.js' // aqui agregas el import del archivo de rutas
+import personRoutes from './routes/person.routes.js'
+import eventtype from './routes/eventtype.routes.js'
+import elementtype from './routes/elementtype.routes.js' // aqui agregas el import del archivo de rutas
 
 const app = express()
 
@@ -13,6 +15,9 @@ app.set('json spaces',2)
 
 app.use(indexRoutes)
 app.use(personRoutes) // aqui usas la variable que importaste arriba con tus rutas
+app.use(eventtype);
+app.use(elementtype);
+
 
 //starting the server
 app.listen(3000, () => { 
