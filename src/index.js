@@ -2,18 +2,27 @@
 
 import express from 'express' 
 import indexRoutes from './routes/index.routes.js'
+import cors from 'cors'
+import morgan from 'morgan'
 import personRoutes from './routes/person.routes.js' // aqui agregas el import del archivo de rutas
 
+import {PORT} from './config.js'
 const app = express()
 
 //settings
 app.use(express.json())
-app.set('port',process.env.PORT || 3000)
+app.use(cors())
+app.use(morgan('dev'))
+app.set('port',PORT)
 app.set('json spaces',2)
 
 app.use(indexRoutes)
-app.use(personRoutes) // aqui usas la variable que importaste arriba con tus rutas
+app.use('/api',personRoutes) // aqui usas la variable que importaste arriba con tus rutas
 
+
+app.use((req, res,next)=>{
+    res.status(404).json({message:'Endpoint not found'})
+})
 //starting the server
 app.listen(3000, () => { 
     console.log(`Server on port ${app.get('port')}`)
