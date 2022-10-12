@@ -4,7 +4,8 @@ import express from 'express'
 import indexRoutes from './routes/index.routes.js'
 import cors from 'cors'
 import morgan from 'morgan'
-import personRoutes from './routes/person.routes.js' // aqui agregas el import del archivo de rutas
+import personRoutes from './routes/person.routes.js'
+import personnelRoutes from './routes/personnel.routes.js' // aqui agregas el import del archivo de rutas
 
 import {PORT} from './config.js'
 const app = express()
@@ -17,7 +18,8 @@ app.set('port',PORT)
 app.set('json spaces',2)
 
 app.use(indexRoutes)
-app.use('/api',personRoutes) // aqui usas la variable que importaste arriba con tus rutas
+app.use('/api',personRoutes)
+app.use('/api',personnelRoutes)// aqui usas la variable que importaste arriba con tus rutas
 
 
 app.use((req, res,next)=>{
