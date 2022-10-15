@@ -7,6 +7,8 @@ import morgan from 'morgan'
 import personRoutes from './routes/person.routes.js'
 import personnelRoutes from './routes/personnel.routes.js' // aqui agregas el import del archivo de rutas
 import elementRoutes from './routes/element.routes.js' 
+import eventtype from './routes/eventtype.routes.js'
+import elementtype from './routes/elementtype.routes.js'
 
 import {PORT} from './config.js'
 const app = express()
@@ -18,10 +20,13 @@ app.use(morgan('dev'))
 app.set('port',PORT)
 app.set('json spaces',2)
 
-app.use('/api',elementRoutes)
+
 app.use(indexRoutes)
-app.use('/api',personRoutes)
-app.use('/api',personnelRoutes)// aqui usas la variable que importaste arriba con tus rutas
+app.use('/api',personRoutes);
+app.use('/api',eventtype);
+app.use('/api',elementtype);
+app.use('/api',elementRoutes);
+app.use('/api',personnelRoutes);// aqui usas la variable que importaste arriba con tus rutas
 
 
 app.use((req, res,next)=>{
