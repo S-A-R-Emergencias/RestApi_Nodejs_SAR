@@ -2,7 +2,7 @@
 
 import {Router} from 'express'
 
-import {getPerson,createPerson,updatePerson,deletePerson, getPersons,loginPerson} from "../controllers/person.controllers.js"
+import {getPerson,createPerson,updatePerson,deletePerson, getPersons,loginPerson,updatePassword} from "../controllers/person.controllers.js"
 
 const router = Router()
 
@@ -15,6 +15,8 @@ router.post('/person',createPerson)
 router.get('/person/login/:email/:password',loginPerson)
 
 router.put('/person/:id',updatePerson)
+
+router.put('/person/:id/:newpassword',updatePassword)
 
 router.delete('/person/:id',deletePerson)
 

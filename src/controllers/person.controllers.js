@@ -30,7 +30,7 @@ export const getPerson = async (req,res) => {
 export const loginPerson = async (req,res) => {
 
     try{
-        const [rows] = await pool.promise().query('SELECT * FROM person WHERE email = ? AND password = ? AND status = 1' ,[req.params.email,req.params.password])
+        const [rows] = await pool.promise().query('SELECT * FROM person WHERE email = ? AND password = MD5(?) AND status = 1' ,[req.params.email,req.params.password])
         if(rows.length <= 0 ) return res.status(404).json({
             message: 'Person not found'
         })
@@ -45,7 +45,7 @@ export const createPerson = async (req,res) => {
     const {name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role} = req.body
     try{
         const [rows] = await pool.promise().query(
-            "INSERT INTO person(name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role) VALUES (?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO person(name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role) VALUES (?,?,?,?,?,?,?,?,MD5(?),?)",
             [name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role])
             
         res.send({rows})
@@ -59,7 +59,6 @@ export const updatePerson = async (req,res) => {
     const {id} = req.params
     const {name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role} = req.body
     try{
-        console.log(req.body)
         const [result] = await pool.promise().query(
             'UPDATE person SET name = IFNULL(?,name), lastName = IFNULL(?,lastName), secondLastName = IFNULL(?,secondLastName), ci = IFNULL(?,ci), address = IFNULL(?,address), birthDate = IFNULL(?,birthDate), email = IFNULL(?,email), telephone = IFNULL(?,telephone) , password =  IFNULL(?,password),role = IFNULL(?,role),  lastUpdate = CURRENT_TIMESTAMP  WHERE id = ?' ,
             [name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role,id])
@@ -71,6 +70,27 @@ export const updatePerson = async (req,res) => {
         }
         const [rows] = await pool.promise().query('SELECT * FROM person WHERE id = ?' ,[id])
         res.json(rows[0])
+    }catch(error){
+        return res.status(500).json({message: 'Something goes wrong'})
+    }
+    
+}
+
+export const updatePassword = async (req,res) => {
+    const {id,newpassword} = req.params
+    try{
+        const [result] = await pool.promise().query(
+            'UPDATE person SET password = MD5(?),  lastUpdate = CURRENT_TIMESTAMP  WHERE id = ?' ,
+            [newpassword,id])
+            
+        if(result.affectedRows <= 0){
+            return res.status(404).json({
+                message: 'Person not found'
+            })
+        }
+        return res.status(200).json({
+            message: 'Password Updated'
+        })
     }catch(error){
         return res.status(500).json({message: 'Something goes wrong'})
     }
