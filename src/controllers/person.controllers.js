@@ -30,7 +30,7 @@ export const getPerson = async (req,res) => {
 export const loginPerson = async (req,res) => {
 
     try{
-        const [rows] = await pool.promise().query('SELECT * FROM person WHERE email = ? AND password = ? AND status = 1' ,[req.params.email,req.params.password])
+        const [rows] = await pool.promise().query('SELECT * FROM person WHERE email = ? AND password = MD5(?) AND status = 1' ,[req.params.email,req.params.password])
         if(rows.length <= 0 ) return res.status(404).json({
             message: 'Person not found'
         })
