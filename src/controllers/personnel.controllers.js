@@ -1,5 +1,6 @@
 //ASIGNADO A ALAN MONTAÑO
-
+import pkg from "../helper/imageUpload.cjs";
+const { cloud } = pkg;
 import { pool } from "../db.js"
 
 export const getPersonnels = async (req,res) => {
@@ -29,11 +30,13 @@ export const getPersonnel = async (req,res) => {
 
 export const createPersonnel = async (req,res) => {
     const {name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role,grade,bloodType,allergies} = req.body
+    console.log(req.body)
     try{
         await pool.promise().query('START TRANSACTION')
         const [rows] = await pool.promise().query(
-            "INSERT INTO person(name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role) VALUES (?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO person(name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role) VALUES (?,?,?,?,?,?,?,?,MD5(?),?)",
             [name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role])
+            const last_id = await pool.promise().query("SELECT MAX(id) FROM person")
             await pool.promise().query(
                 "INSERT INTO personnel(id,grade,bloodType,allergies) VALUES ((SELECT MAX(id) FROM person),?,?,?)",
                 [grade,bloodType,allergies])
@@ -96,3 +99,22 @@ export const deletePersonnel = async (req,res) => {
     }
     
 }
+
+ export const hostImage = async (req, res) => {
+    try {
+      const result = await cloud.uploader.upload(req.file.path, {
+        public_id: `${req.params.id}_${req.params.type}`,
+        width: 500,
+        height: 500,
+        crop: 'fill',
+      });
+      res
+        .status(201)
+        .json({ success: true, message: 'Your profile has updated!' });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ success: false, message: 'server error, try after some time' });
+      console.log('Error while uploading profile image', error.message);
+    }
+  };
