@@ -42,11 +42,11 @@ export const loginPerson = async (req,res) => {
 }
 
 export const createPerson = async (req,res) => {
-    const {name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role} = req.body
+    const {name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role,image} = req.body
     try{
         const [rows] = await pool.promise().query(
-            "INSERT INTO person(name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role) VALUES (?,?,?,?,?,?,?,?,MD5(?),?)",
-            [name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role])
+            "INSERT INTO person(name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role,image) VALUES (?,?,?,?,?,?,?,?,MD5(?),?,?)",
+            [name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role,image])
             
         res.send({rows})
     }catch(error){
@@ -57,11 +57,11 @@ export const createPerson = async (req,res) => {
 
 export const updatePerson = async (req,res) => {
     const {id} = req.params
-    const {name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role} = req.body
+    const {name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role,image} = req.body
     try{
         const [result] = await pool.promise().query(
-            'UPDATE person SET name = IFNULL(?,name), lastName = IFNULL(?,lastName), secondLastName = IFNULL(?,secondLastName), ci = IFNULL(?,ci), address = IFNULL(?,address), birthDate = IFNULL(?,birthDate), email = IFNULL(?,email), telephone = IFNULL(?,telephone) , password =  IFNULL(?,password),role = IFNULL(?,role),  lastUpdate = CURRENT_TIMESTAMP  WHERE id = ?' ,
-            [name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role,id])
+            'UPDATE person SET name = IFNULL(?,name), lastName = IFNULL(?,lastName), secondLastName = IFNULL(?,secondLastName), ci = IFNULL(?,ci), address = IFNULL(?,address), birthDate = IFNULL(?,birthDate), email = IFNULL(?,email), telephone = IFNULL(?,telephone) , password =  IFNULL(?,password),role = IFNULL(?,role), image = IFNULL(?,image),  lastUpdate = CURRENT_TIMESTAMP  WHERE id = ?' ,
+            [name,lastName,secondLastName,ci,address,birthDate,email,telephone,password,role,image,id])
             
         if(result.affectedRows <= 0){
             return res.status(404).json({
